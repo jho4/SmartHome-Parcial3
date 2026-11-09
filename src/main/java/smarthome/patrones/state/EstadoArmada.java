@@ -1,6 +1,6 @@
 package smarthome.patrones.state;
 
-import com.smarthome.modelo.Alarma;
+import smarthome.modelo.Alarma;
 
 public final class EstadoArmada implements EstadoAlarma {
 

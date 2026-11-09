@@ -3,44 +3,46 @@ package smarthome.patrones.observer;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-// Sujeto de Observer:
-// comunica los eventos a los observadores registrados.
+// Publicador del patrón Observer.
+// Guarda los observadores registrados y les comunica los eventos.
 public final class CentroEventos implements PublicadorEventos {
 
-    private final List<ObservadorEventos> observadores =
-            new ArrayList<>();
+    private final List<ObservadorEventos> observadores = new ArrayList<>();
 
-    public void agregarObservador(
-            ObservadorEventos observador) {
+    // Permite registrar un observador.
+    public void agregarObservador(ObservadorEventos observador) {
 
-        Objects.requireNonNull(observador);
-
-        if (!observadores.contains(observador)) {
-
-            observadores.add(observador);
+        if (observador == null) {
+            throw new IllegalArgumentException(
+                    "El observador no puede ser nulo.");
         }
+
+        // Evitamos registrar el mismo objeto dos veces.
+        for (ObservadorEventos registrado : observadores) {
+            if (registrado == observador) {
+                return;
+            }
+        }
+
+        observadores.add(observador);
     }
 
-    public void quitarObservador(
-            ObservadorEventos observador) {
-
+    // Permite retirar un observador.
+    public void quitarObservador(ObservadorEventos observador) {
         observadores.remove(observador);
     }
 
+    // Crea un evento y notifica a los observadores.
     @Override
     public void publicar(String origen, String detalle) {
 
-        EventoHogar evento = new EventoHogar(
-                LocalTime.now(),
-                origen,
-                detalle
-        );
+        EventoHogar evento = new EventoHogar(LocalTime.now(), origen, detalle);
 
-        for (ObservadorEventos observador
-                : List.copyOf(observadores)) {
+        // Recorremos una copia por si un observador se retira durante el aviso.
+        List<ObservadorEventos> copia = new ArrayList<>(observadores);
 
+        for (ObservadorEventos observador : copia) {
             observador.alRecibirEvento(evento);
         }
     }

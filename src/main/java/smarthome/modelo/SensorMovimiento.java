@@ -3,8 +3,9 @@ package smarthome.modelo;
 import smarthome.patrones.mediator.MediadorHogar;
 import smarthome.patrones.observer.PublicadorEventos;
 
-import java.util.Objects;
-
+// Sensor de movimiento simulado.
+// Publica una notificación (Observer) y comunica el movimiento (Mediator).
+// No conoce directamente a la alarma.
 public final class SensorMovimiento extends Dispositivo {
 
     private final MediadorHogar mediador;
@@ -17,20 +18,25 @@ public final class SensorMovimiento extends Dispositivo {
             MediadorHogar mediador,
             PublicadorEventos eventos) {
 
+        // Inicializamos los datos comunes de Dispositivo.
         super(id, nombre);
 
-        this.mediador = Objects.requireNonNull(mediador);
+        if (mediador == null || eventos == null) {
+            throw new IllegalArgumentException(
+                    "El sensor necesita mediador y eventos.");
+        }
 
-        this.eventos = Objects.requireNonNull(eventos);
+        this.mediador = mediador;
+        this.eventos = eventos;
     }
 
+    // Simula que el sensor detecta movimiento.
     public void simularMovimiento() {
 
-        eventos.publicar(
-                obtenerNombre(),
-                "Movimiento detectado"
-        );
+        // Observer comunica que se detectó movimiento.
+        eventos.publicar(obtenerNombre(), "Movimiento detectado");
 
+        // Mediator coordina la reacción de seguridad.
         mediador.recibirMovimiento();
     }
 }

@@ -1,17 +1,15 @@
 package smarthome.patrones.mediator;
 
-import com.smarthome.modelo.Alarma;
+import smarthome.modelo.Alarma;
 
-import com.smarthome.patrones.command.ComandoEncender;
-import com.smarthome.patrones.command.GestorComandos;
+import smarthome.patrones.command.ComandoEncender;
+import smarthome.patrones.command.GestorComandos;
 
-import com.smarthome.patrones.composite.DispositivoControlable;
+import smarthome.patrones.composite.DispositivoControlable;
 
-import java.util.Objects;
-
-// Mediator:
-// el sensor no conoce directamente
-// la alarma ni la luz de seguridad.
+// Implementación del patrón Mediator.
+// Coordina la alarma y la luz de seguridad cuando recibe un movimiento.
+// El sensor no se comunica directamente con estos componentes.
 public final class MediadorSeguridad implements MediadorHogar {
 
     private final Alarma alarma;
@@ -25,26 +23,32 @@ public final class MediadorSeguridad implements MediadorHogar {
             DispositivoControlable luzSeguridad,
             GestorComandos comandos) {
 
-        this.alarma = Objects.requireNonNull(alarma);
+        if (alarma == null
+                || luzSeguridad == null
+                || comandos == null) {
 
-        this.luzSeguridad = Objects.requireNonNull(luzSeguridad);
+            throw new IllegalArgumentException(
+                    "Faltan componentes de seguridad.");
+        }
 
-        this.comandos = Objects.requireNonNull(comandos);
+        this.alarma = alarma;
+        this.luzSeguridad = luzSeguridad;
+        this.comandos = comandos;
     }
 
+    // Recibe las detecciones enviadas por el sensor.
     @Override
     public void recibirMovimiento() {
 
-        boolean estabaActivada =
-                alarma.estaActivada();
+        // Guardamos si la alarma ya estaba activada.
+        boolean estabaActivada = alarma.estaActivada();
 
+        // State decide cómo responder al movimiento.
         alarma.detectarMovimiento();
 
+        // Encendemos la luz solo cuando la alarma acaba de activarse.
         if (!estabaActivada && alarma.estaActivada()) {
-
-            comandos.ejecutarAutomatico(
-                    new ComandoEncender(luzSeguridad)
-            );
+            comandos.ejecutarAutomatico(new ComandoEncender(luzSeguridad));
         }
     }
 }
