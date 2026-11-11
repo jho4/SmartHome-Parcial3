@@ -28,7 +28,7 @@ import smarthome.servicio.ServicioClimatizacion;
 import smarthome.servicio.ServicioDispositivos;
 
 import java.util.List;
-import java.util.Map;
+
 
 // Crea los componentes iniciales del hogar
 // y establece sus relaciones.
@@ -162,10 +162,7 @@ public final class ConfiguracionHogar {
                 luces,
                 alarma,
                 sensor,
-                Map.of(
-                        "Noche", noche,
-                        "Llegada", llegada
-                ),
+                List.of(noche, llegada),
                 eventos,
                 historial
         );
