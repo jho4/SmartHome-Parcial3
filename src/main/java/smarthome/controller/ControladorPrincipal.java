@@ -1,5 +1,5 @@
 package smarthome.controller;
-
+import smarthome.patrones.observer.EventoHogar;
 import smarthome.modelo.ResumenDispositivo;
 
 import smarthome.patrones.facade.FachadaHogar;
@@ -15,6 +15,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 import java.util.List;
+
 import java.util.Objects;
 
 // Controlador MVC:
@@ -93,24 +94,22 @@ public final class ControladorPrincipal {
         for (ResumenDispositivo dispositivo
                 : fachada.consultarDispositivos()) {
 
-            Label etiqueta = switch (dispositivo.id()) {
+            String textoEstado;
 
-                case "sala" -> estadoSala;
+            if (dispositivo.encendido()) {
+                textoEstado = "Encendido";
+            } else {
+                textoEstado = "Apagado";
+            }
 
-                case "habitacion" -> estadoHabitacion;
+            if (dispositivo.id().equals("sala")) {
+                estadoSala.setText(textoEstado);
 
-                case "ventilador" -> estadoVentilador;
+            } else if (dispositivo.id().equals("habitacion")) {
+                estadoHabitacion.setText(textoEstado);
 
-                default -> null;
-            };
-
-            if (etiqueta != null) {
-
-                etiqueta.setText(
-                        dispositivo.encendido()
-                                ? "Encendido"
-                                : "Apagado"
-                );
+            } else if (dispositivo.id().equals("ventilador")) {
+                estadoVentilador.setText(textoEstado);
             }
         }
 
@@ -126,26 +125,27 @@ public final class ControladorPrincipal {
                 !fachada.puedeDeshacer()
         );
 
-        List<String> lineas = fachada.consultarEventos()
-                .stream()
-                .map(evento -> evento.describir())
-                .toList();
+        List<EventoHogar> eventos =
+                fachada.consultarEventos();
 
-        int desde = Math.max(
-                0,
-                lineas.size() - 25
-        );
+        int desde = eventos.size() - 25;
 
-        areaEventos.setText(
-                String.join(
-                        "\n",
-                        lineas.subList(
-                                desde,
-                                lineas.size()
-                        )
-                )
-        );
+        if (desde < 0) {
+            desde = 0;
+        }
 
+        String texto = "";
+
+        for (int i = desde; i < eventos.size(); i++) {
+
+            if (!texto.isEmpty()) {
+                texto += "\n";
+            }
+
+            texto += eventos.get(i).describir();
+        }
+
+        areaEventos.setText(texto);
         areaEventos.positionCaret(
                 areaEventos.getLength()
         );

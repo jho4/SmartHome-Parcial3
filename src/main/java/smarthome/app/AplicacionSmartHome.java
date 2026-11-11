@@ -17,7 +17,7 @@ public final class AplicacionSmartHome extends Application {
 
         FXMLLoader cargador = new FXMLLoader(
                 AplicacionSmartHome.class.getResource(
-                        "/com/smarthome/vista/principal.fxml"
+                        "/smarthome/vista/principal.fxml"
                 )
         );
 

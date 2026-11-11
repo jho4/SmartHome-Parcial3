@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    Vista principal de SmartHome-Parcial3.
+
+    Arquitectura MVC:
+    Este archivo representa la Vista.
+
+    La lógica del hogar se encuentra
+    en los modelos, servicios y patrones.
+
+    Controlador:
+    smarthome.controller.ControladorPrincipal
+-->
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="smarthome.controller.ControladorPrincipal"
+            fitToWidth="true">
+
+    <content>
+
+        <VBox spacing="16"
+              style="-fx-background-color: #f4f7fb;">
+
+            <padding>
+                <Insets top="22"
+                        right="26"
+                        bottom="22"
+                        left="26"/>
+            </padding>
+
+
+            <!-- ENCABEZADO -->
+
+            <Label text="SMART HOME | PARCIAL 3"
+                   style="-fx-font-size: 25px;
+                          -fx-font-weight: bold;
+                          -fx-text-fill: #183153;"/>
+
+            <Label text="Control y automatización de un hogar inteligente simulado"
+                   style="-fx-text-fill: #536579;"/>
+
+
+            <!-- SECCIÓN 1: DISPOSITIVOS -->
+
+            <VBox spacing="11"
+                  style="-fx-background-color: white;
+                         -fx-padding: 15;
+                         -fx-background-radius: 8;">
+
+                <Label text="DISPOSITIVOS"
+                       style="-fx-font-size: 17px;
+                              -fx-font-weight: bold;"/>
+
+                <GridPane hgap="12"
+                          vgap="10">
+
+                    <columnConstraints>
+
+                        <ColumnConstraints minWidth="150"
+                                           prefWidth="190"/>
+
+                        <ColumnConstraints prefWidth="95"/>
+
+                        <ColumnConstraints prefWidth="90"/>
+
+                        <ColumnConstraints prefWidth="90"/>
+
+                    </columnConstraints>
+
+
+                    <!-- LUZ DE SALA -->
+
+                    <Label text="Luz de sala"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="0"/>
+
+                    <Label fx:id="estadoSala"
+                           text="Apagado"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"/>
+
+                    <Button text="Encender"
+                            onAction="#encenderSala"
+                            GridPane.rowIndex="0"
+                            GridPane.columnIndex="2"/>
+
+                    <Button text="Apagar"
+                            onAction="#apagarSala"
+                            GridPane.rowIndex="0"
+                            GridPane.columnIndex="3"/>
+
+
+                    <!-- LUZ DE HABITACIÓN -->
+
+                    <Label text="Luz de habitación"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="0"/>
+
+                    <Label fx:id="estadoHabitacion"
+                           text="Apagado"
+                           GridPane.rowIndex="1"
+                           GridPane.columnIndex="1"/>
+
+                    <Button text="Encender"
+                            onAction="#encenderHabitacion"
+                            GridPane.rowIndex="1"
+                            GridPane.columnIndex="2"/>
+
+                    <Button text="Apagar"
+                            onAction="#apagarHabitacion"
+                            GridPane.rowIndex="1"
+                            GridPane.columnIndex="3"/>
+
+
+                    <!-- VENTILADOR -->
+
+                    <Label text="Ventilador"
+                           GridPane.rowIndex="2"
+                           GridPane.columnIndex="0"/>
+
+                    <Label fx:id="estadoVentilador"
+                           text="Apagado"
+                           GridPane.rowIndex="2"
+                           GridPane.columnIndex="1"/>
+
+                    <Button text="Encender"
+                            onAction="#encenderVentilador"
+                            GridPane.rowIndex="2"
+                            GridPane.columnIndex="2"/>
+
+                    <Button text="Apagar"
+                            onAction="#apagarVentilador"
+                            GridPane.rowIndex="2"
+                            GridPane.columnIndex="3"/>
+
+                </GridPane>
+
+
+                <!-- COMPOSITE: CONTROL DE GRUPOS -->
+
+                <HBox spacing="10">
+
+                    <Button text="Encender todas las luces"
+                            onAction="#encenderLuces"/>
+
+                    <Button text="Apagar todas las luces"
+                            onAction="#apagarLuces"/>
+
+                </HBox>
+
+
+                <!-- COMMAND: DESHACER ACCIONES -->
+
+                <Button fx:id="botonDeshacer"
+                        text="Deshacer última acción manual"
+                        onAction="#deshacer"/>
+
+            </VBox>
+
+
+            <!-- SECCIÓN 2: CLIMATIZACIÓN -->
+            <!-- PATRÓN STRATEGY -->
+
+            <VBox spacing="10"
+                  style="-fx-background-color: white;
+                         -fx-padding: 15;
+                         -fx-background-radius: 8;">
+
+                <Label text="CLIMATIZACIÓN"
+                       style="-fx-font-size: 17px;
+                              -fx-font-weight: bold;"/>
+
+                <HBox spacing="12"
+                      alignment="CENTER_LEFT">
+
+                    <Label text="Temperatura (°C):"/>
+
+                    <TextField fx:id="campoTemperatura"
+                               prefWidth="85"
+                               promptText="Ej: 26"/>
+
+                    <Label text="Estrategia:"/>
+
+                    <ComboBox fx:id="selectorModo"
+                              prefWidth="125"/>
+
+                    <Button text="Aplicar"
+                            onAction="#aplicarClimatizacion"/>
+
+                    <Label text="Actual:"/>
+
+                    <Label fx:id="modoActual"
+                           text="Ahorro"/>
+
+                </HBox>
+
+                <Label text="Ahorro: desde 28 °C | Confort: desde 24 °C"
+                       style="-fx-text-fill: #536579;"/>
+
+            </VBox>
+
+
+            <!-- SECCIÓN 3: SISTEMA DE SEGURIDAD -->
+            <!-- PATRONES STATE Y MEDIATOR -->
+
+            <VBox spacing="12"
+                  style="-fx-background-color: white;
+                         -fx-padding: 15;
+                         -fx-background-radius: 8;">
+
+                <Label text="SISTEMA DE SEGURIDAD"
+                       style="-fx-font-size: 17px;
+                              -fx-font-weight: bold;"/>
+
+                <Label text="Control de vigilancia y detección de movimiento"
+                       style="-fx-text-fill: #536579;"/>
+
+
+                <!-- ESTADO ACTUAL DE LA ALARMA -->
+
+                <HBox spacing="12"
+                      alignment="CENTER_LEFT">
+
+                    <Label text="Estado de vigilancia:"/>
+
+                    <Label fx:id="estadoAlarma"
+                           text="Desarmada"
+                           style="-fx-font-weight: bold;
+                                  -fx-text-fill: #183153;"/>
+
+                </HBox>
+
+
+                <!-- BOTONES DEL SISTEMA DE SEGURIDAD -->
+
+                <HBox spacing="12"
+                      alignment="CENTER_LEFT">
+
+                    <Button text="🔒 Activar vigilancia"
+                            onAction="#armarAlarma"/>
+
+                    <Button text="🔓 Desactivar vigilancia"
+                            onAction="#desarmarAlarma"/>
+
+                    <Button text="🚶 Simular movimiento"
+                            onAction="#simularMovimiento"/>
+
+                </HBox>
+
+
+                <!-- EXPLICACIÓN DEL FUNCIONAMIENTO -->
+
+                <Separator/>
+
+                <Label text="ℹ️ ¿Cómo funciona la alarma?"
+                       style="-fx-font-size: 14px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #183153;"/>
+
+
+                <!-- ESTADO DESARMADA -->
+
+                <Label text="🔓 Desarmada (vigilancia desactivada): el sistema no genera alertas cuando el sensor detecta movimiento."
+                       wrapText="true"
+                       style="-fx-text-fill: #536579;"/>
+
+
+                <!-- ESTADO ARMADA -->
+
+                <Label text="🔒 Armada (vigilancia activada): el sistema está preparado para reaccionar ante una detección de movimiento. Esto no significa que la alarma esté sonando."
+                       wrapText="true"
+                       style="-fx-text-fill: #536579;"/>
+
+
+                <!-- ESTADO ACTIVADA -->
+
+                <Label text="🚨 Activada (alerta por movimiento): se detectó movimiento mientras la vigilancia estaba activada. La alarma cambia al estado de alerta y se enciende automáticamente la luz de sala."
+                       wrapText="true"
+                       style="-fx-text-fill: #536579;"/>
+
+
+                <!-- INFORMACIÓN ADICIONAL -->
+
+                <Label text="Nota: esta es una simulación de seguridad. No reproduce una sirena ni detecta movimientos mediante sensores físicos."
+                       wrapText="true"
+                       style="-fx-font-size: 11px;
+                              -fx-text-fill: #738396;"/>
+
+            </VBox>
+
+
+            <!-- SECCIÓN 4: ESCENAS -->
+            <!-- PATRONES BUILDER Y COMMAND -->
+
+            <VBox spacing="10"
+                  style="-fx-background-color: white;
+                         -fx-padding: 15;
+                         -fx-background-radius: 8;">
+
+                <Label text="ESCENAS"
+                       style="-fx-font-size: 17px;
+                              -fx-font-weight: bold;"/>
+
+                <Label text="Ejecuta varias acciones del hogar mediante una sola operación."
+                       wrapText="true"
+                       style="-fx-text-fill: #536579;"/>
+
+                <HBox spacing="12">
+
+                    <Button text="🌙 Escena Noche"
+                            onAction="#escenaNoche"/>
+
+                    <Button text="🏠 Escena Llegada"
+                            onAction="#escenaLlegada"/>
+
+                </HBox>
+
+
+                <!-- DESCRIPCIÓN DE LAS ESCENAS -->
+
+                <Label text="Noche: apaga las luces y el ventilador, y activa la vigilancia."
+                       wrapText="true"
+                       style="-fx-text-fill: #536579;"/>
+
+                <Label text="Llegada: desactiva la vigilancia y enciende la luz de sala."
+                       wrapText="true"
+                       style="-fx-text-fill: #536579;"/>
+
+            </VBox>
+
+
+            <!-- SECCIÓN 5: HISTORIAL DE EVENTOS -->
+            <!-- PATRÓN OBSERVER -->
+
+            <VBox spacing="10"
+                  style="-fx-background-color: white;
+                         -fx-padding: 15;
+                         -fx-background-radius: 8;">
+
+                <Label text="HISTORIAL DE EVENTOS"
+                       style="-fx-font-size: 17px;
+                              -fx-font-weight: bold;"/>
+
+                <Label text="Registro de cambios, acciones y acontecimientos del hogar."
+                       style="-fx-text-fill: #536579;"/>
+
+                <TextArea fx:id="areaEventos"
+                          editable="false"
+                          wrapText="true"
+                          prefRowCount="8"
+                          promptText="Aquí aparecerán los eventos del hogar..."/>
+
+            </VBox>
+
+
+            <!-- PIE DE LA APLICACIÓN -->
+
+            <HBox alignment="CENTER">
+
+                <Label text="SmartHome-Parcial3 | Java 21 | JavaFX | MVC"
+                       style="-fx-font-size: 11px;
+                              -fx-text-fill: #738396;"/>
+
+            </HBox>
+
+        </VBox>
+
+    </content>
+
+</ScrollPane>
